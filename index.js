@@ -1,1 +1,3 @@
-console.log('Huhu');
+(() => {
+  console.log('HUHU');
+})();
