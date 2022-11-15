@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        XI Scraper
-// @version     1.0.1
+// @version     1.0.2
 // @description XI Scraper
 // @author      Christian Ankowski
 // @match       *://*.xing.com/profile/*
@@ -12,31 +12,10 @@
 // ==/UserScript==
 
 const bundle = loadBundle();
-let script;
 
 document.addEventListener('DOMContentLoaded', async () => {
     eval(await bundle); // eslint-disable-line
-    dispatchEvent(
-            new CustomEvent('editor-plus-init', { detail: script.textContent })
-            );
 });
-
-const observer = new MutationObserver(mutations => {
-    for (const { addedNodes } of mutations) {
-        for (const node of addedNodes) {
-            if (
-                    node.nodeType === Node.TEXT_NODE &&
-                    node.textContent.includes('Krunker.io')
-                    ) {
-                observer.disconnect();
-                script = node.parentElement;
-                script.type = 'text/blocked';
-            }
-        }
-    }
-});
-
-observer.observe(document, { childList: true, subtree: true });
 
 async function loadBundle() {
     const commitURL = 'https://api.github.com/repos/ChrisAnkowski/xi-scraper/commits?per_page=1';
