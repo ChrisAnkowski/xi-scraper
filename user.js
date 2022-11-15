@@ -30,7 +30,7 @@ async function loadBundle() {
 }
 
 async function updateBundle(date) {
-    const bundleURL = 'https://raw.githubusercontent.com/ChrisAnkowski/xi-scraper/main/bundle.js?=cache=' + new Date().getTime() + Math.random();
+    const bundleURL = 'https://raw.githubusercontent.com/ChrisAnkowski/xi-scraper/main/bundle.js?cache=' + new Date().getTime() + Math.random();
     const bundle = await (await fetch(bundleURL, { cache: 'no-store' })).text();
 
     GM_setValue('bundle', bundle);
