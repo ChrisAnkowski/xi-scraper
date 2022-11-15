@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name        XI Scraper
 // @version     1.0.0
+// @description XI Scraper
 // @author      Christian Ankowski
 // @match       *://*.xing.com/profile/*
 // @run-at      document-start
