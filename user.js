@@ -22,7 +22,7 @@ async function loadBundle() {
     const lastModified = GM_getValue('lastModified') || 0;
 
     const commit = (await (await fetch(commitURL, { cache: 'no-store' })).json())[0].commit;
-    const commitDate = Date.parse(commit.committer.date);
+    const commitDate = new Date(commit.committer.date);
 
     if (commitDate > lastModified) return updateBundle(commitDate);
 
