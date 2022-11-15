@@ -4,7 +4,7 @@
 // @description XI Scraper
 // @author      Christian Ankowski
 // @match       *://*.xing.com/profile/*
-// @run-at      document-start
+// @run-at      document-end
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @downloadURL https://github.com/ChrisAnkowski/xi-scraper/raw/main/user.js
