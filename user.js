@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function loadBundle() {
-    const bundleURL = 'https://raw.githubusercontent.com/ChrisAnkowski/xi-scraper/main/bundle.js?cache=' + new Date().getTime() + Math.random();
+    const bundleURL = 'https://raw.githubusercontent.com/ChrisAnkowski/xi-scraper/main/dist/index.js';
     const bundle = await (await fetch(bundleURL, { cache: 'no-store' })).text();
 
     GM_setValue('bundle', bundle);

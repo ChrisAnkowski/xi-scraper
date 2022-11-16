@@ -17,6 +17,7 @@ ready(() => {
     button.onclick = scrapeInformation;
     const moreButton = document.querySelector('*[data-qa="more-button"]');
     insertAfter(button, moreButton);
+    console.log('Neues Script')
 });
 
 function scrapeInformation() {
