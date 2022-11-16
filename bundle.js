@@ -1,9 +1,5 @@
-// Vorname
-// Nachname
-// Telefon
-// E-Mail
-// Geburtsdatum
-// Geschlecht
+// Vorname ✅
+// Nachname ✅
 // Aktuelle Position
 // Gehaltswunsch
 // Berufserfahrung
@@ -21,17 +17,30 @@ ready(() => {
 });
 
 function scrapeInformation() {
+    searchForName();
+    searchForSalaryWish();
+    console.log(userData);
+}
+
+function searchForSalaryWish() {
+    const allH2Array = [...document.querySelectorAll("h2")];
+    const salaryHeadline = allH2Array.filter((element) => element.textContent.includes("Gehaltsvorstellung"));
+    const salaryHeadlineSibling = salaryHeadline.nextElementSibling;
+    const salaryWish = salaryHeadlineSibling.textContent;
+    addInformationToResult('Gehalt', salaryWish);
+}
+
+function searchForName() {
     const name = document.querySelector('#content *[data-xds="Hero"]').innerText.replace(/<(.|\n)*?>/g, '').split('\n')[0].trim();
     const nameSplit = name.split(' ');
     let nachname = nameSplit.pop();
-    let vorname = nameSplit.concat(' ');
+    let vorname = typeof nameSplit === 'string' ? nameSplit : nameSplit.join(' ');
     addInformationToResult('vorname', vorname);
     addInformationToResult('nachname', nachname);
 }
 
 function addInformationToResult(key, info) {
     userData[key] = info;
-    console.log(userData);
 }
 
 function insertAfter(newNode, referenceNode) {
