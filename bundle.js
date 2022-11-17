@@ -13,7 +13,7 @@ ready(() => {
     button.onclick = scrapeInformation;
     const moreButton = document.querySelector('*[data-qa="more-button"]');
     insertAfter(button, moreButton);
-    console.log('Neues Script')
+    console.log('Neues Script 123')
 });
 
 function scrapeInformation() {
@@ -35,7 +35,7 @@ function searchForSalaryWish() {
 }
 
 function searchForName() {
-    const name = document.querySelector('#content *[data-xds="Hero"]').innerText.replace(/<(.|\n)*?>/g, '').split('\n')[0].trim();
+    const name = document.querySelector('#XingIdModule *[data-xds="Hero"]').innerText.replace(/<(.|\n)*?>/g, '').split('\n')[0].trim();
     const nameSplit = name.split(' ');
     let nachname = nameSplit.pop();
     let vorname = typeof nameSplit === 'string' ? nameSplit : nameSplit.join(' ');
