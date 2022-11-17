@@ -13,7 +13,7 @@ ready(() => {
     button.onclick = scrapeInformation;
     const moreButton = document.querySelector('*[data-qa="more-button"]');
     insertAfter(button, moreButton);
-    console.log('Neues Script 123')
+    console.log('Neues Script 1234')
 });
 
 function scrapeInformation() {
@@ -29,9 +29,9 @@ function searchForSalaryWish() {
         const salaryHeadlineSibling = salaryHeadline[0].nextElementSibling;
         const salaryWish = salaryHeadlineSibling.textContent;
         console.log(salaryWish)
-        addInformationToResult('Gehalt', salaryWish);
+        addInformationToResult('gehalt', salaryWish);
     }
-    addInformationToResult('Gehalt', '');
+    addInformationToResult('gehalt', '');
 }
 
 function searchForName() {
