@@ -3,7 +3,7 @@
 // @version     1.0.2
 // @description XI Scraper
 // @author      Christian Ankowski
-// @match       *://*.xing.com/profile/*
+// @match       *://*.xing.com/*
 // @run-at      document-end
 // @grant       GM_setValue
 // @grant       GM_getValue
