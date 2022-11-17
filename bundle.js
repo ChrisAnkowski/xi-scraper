@@ -1,7 +1,7 @@
 // Vorname ✅
 // Nachname ✅
 // Aktuelle Position
-// Gehaltswunsch
+// Gehaltswunsch ✅
 // Berufserfahrung
 // Ausbildung / Qualifikation
 // Ort
@@ -25,9 +25,13 @@ function scrapeInformation() {
 function searchForSalaryWish() {
     const allH2Array = [...document.querySelectorAll("h2")];
     const salaryHeadline = allH2Array.filter((element) => element.textContent.includes("Gehaltsvorstellung"));
-    const salaryHeadlineSibling = salaryHeadline.nextElementSibling;
-    const salaryWish = salaryHeadlineSibling.textContent;
-    addInformationToResult('Gehalt', salaryWish);
+    if (salaryHeadline) {
+        const salaryHeadlineSibling = salaryHeadline[0].nextElementSibling;
+        const salaryWish = salaryHeadlineSibling.textContent;
+        console.log(salaryWish)
+        addInformationToResult('Gehalt', salaryWish);
+    }
+    addInformationToResult('Gehalt', '');
 }
 
 function searchForName() {
