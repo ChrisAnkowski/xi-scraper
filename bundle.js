@@ -67,7 +67,7 @@ function searchForJobTitle() {
     if (jobTitleString.includes('Student')) {
         jobTitle = jobTitleString[0] + ' ' + jobTitleString[1];
     }
-    addInformationToResult('Aktuelle Position', jobTitle);
+    addInformationToResult('currentJob', jobTitle.trim());
 }
 
 function addInformationToResult(key, info) {
