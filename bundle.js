@@ -1,6 +1,6 @@
 // Vorname ✅
 // Nachname ✅
-// Aktuelle Position
+// Aktuelle Position ✅
 // Gehaltswunsch ✅
 // Berufserfahrung
 // Ausbildung / Qualifikation
@@ -16,22 +16,34 @@ ready(() => {
     console.log('Neues Script 1234')
 });
 
+function getJobExpirience() {
+    const jobs = getAllJobs();
+}
+
+function getAllJobs() {
+    const section = document.getElementById('ProfileTimelineModule');
+    const headline = [...section.querySelectorAll('*')].filter(element => element.textContent.includes("Berufliche Stationen"));
+    console.log(headline)
+}
+
 function scrapeInformation() {
     searchForName();
     searchForSalaryWish();
+    searchForJobTitle();
+    getJobExpirience();
     console.log(userData);
 }
 
 function searchForSalaryWish() {
     const allH2Array = [...document.querySelectorAll("h2")];
     const salaryHeadline = allH2Array.filter((element) => element.textContent.includes("Gehaltsvorstellung"));
-    if (salaryHeadline) {
+    if (salaryHeadline.length > 0) {
         const salaryHeadlineSibling = salaryHeadline[0].nextElementSibling;
         const salaryWish = salaryHeadlineSibling.textContent;
-        console.log(salaryWish)
         addInformationToResult('gehalt', salaryWish);
+    } else {
+        addInformationToResult('gehalt', 'Nicht angegeben');
     }
-    addInformationToResult('gehalt', '');
 }
 
 function searchForName() {
@@ -41,6 +53,15 @@ function searchForName() {
     let vorname = typeof nameSplit === 'string' ? nameSplit : nameSplit.join(' ');
     addInformationToResult('vorname', vorname);
     addInformationToResult('nachname', nachname);
+}
+
+function searchForJobTitle() {
+    const jobTitleString = document.querySelector('#XingIdModule *[data-xds="Hero"]').parentElement.nextElementSibling.querySelector('section p').textContent.split(',');
+    let jobTitle = jobTitleString[1];
+    if (jobTitleString.includes('Student')) {
+        jobTitle = jobTitleString[0] + ' ' + jobTitleString[1];
+    }
+    addInformationToResult('Aktuelle Position', jobTitle);
 }
 
 function addInformationToResult(key, info) {
