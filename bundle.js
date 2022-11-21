@@ -6,6 +6,15 @@
 // Ausbildung / Qualifikation
 // Ort
 
+
+// const string = url;
+// const regexp = /(\d{0,2}) Jahr/g;
+// const matches = string.matchAll(regexp);
+// let test = [];
+// for (const match of matches) {
+// 	test.push(match[1]);
+// }
+
 let userData = {};
 ready(() => {
     const button = document.createElement('button');
@@ -18,17 +27,36 @@ ready(() => {
 function getLocation() {
     const locationPin = document.querySelector('*[data-xds="IconLocationPin"]');
     const locationString = locationPin.parentNode.lastElementChild.textContent;
-    addInformationToResult('ort', locationString);
+    addInformationToResult('city', locationString);
 }
 
 function getJobExpirience() {
     const jobs = getAllJobs();
 }
 
+function extractYearsAsMonths(string) {
+    const regexp = /(\d{0,2}) Jahr/g;
+    const matches = string.matchAll(regexp);
+    let test = [];
+    for (const match of matches) {
+    	test.push(Number(match[1]) * 12);
+    }
+    return test
+}
+
 function getAllJobs() {
     const section = document.getElementById('ProfileTimelineModule');
-    const headline = [...section.querySelectorAll('*')].filter(element => element.textContent.includes("Berufliche Stationen"));
-    console.log(headline)
+    const headline = [...section.querySelectorAll('*[data-xds="Headline"]')].filter(element => element.innerText.includes("Berufliche Stationen")).at(0);
+    const ersteStationen = [...headline.parentNode.querySelectorAll(':scope > div')];
+    const mehrAnzeigenStationen = [...headline.parentNode.nextSibling.querySelectorAll('*[data-qa="bucket"]:first-child > div')];
+    let jobDuration = [];
+    ersteStationen.forEach((element) => {
+        jobDuration.push(element.querySelector('p[data-xds="BodyCopy"]').nextElementSibling.innerText);
+    })
+    mehrAnzeigenStationen.forEach((element) => {
+        jobDuration.push(element.querySelector('p[data-xds="BodyCopy"]').nextElementSibling.innerText);
+    })
+    console.log(extractYearsAsMonths(jobDuration.join(' ')));
 }
 
 function scrapeInformation() {
@@ -46,9 +74,9 @@ function searchForSalaryWish() {
     if (salaryHeadline.length > 0) {
         const salaryHeadlineSibling = salaryHeadline[0].nextElementSibling;
         const salaryWish = salaryHeadlineSibling.textContent;
-        addInformationToResult('gehalt', salaryWish);
+        addInformationToResult('salary', salaryWish);
     } else {
-        addInformationToResult('gehalt', 'Nicht angegeben');
+        addInformationToResult('salary', 'Nicht angegeben');
     }
 }
 
@@ -57,8 +85,8 @@ function searchForName() {
     const nameSplit = name.split(' ');
     let nachname = nameSplit.pop();
     let vorname = typeof nameSplit === 'string' ? nameSplit : nameSplit.join(' ');
-    addInformationToResult('vorname', vorname);
-    addInformationToResult('nachname', nachname);
+    addInformationToResult('firstname', vorname);
+    addInformationToResult('lastname', nachname);
 }
 
 function searchForJobTitle() {
