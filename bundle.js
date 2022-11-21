@@ -13,8 +13,13 @@ ready(() => {
     button.onclick = scrapeInformation;
     const moreButton = document.querySelector('*[data-qa="more-button"]');
     insertAfter(button, moreButton);
-    console.log('Neues Script 1234')
 });
+
+function getLocation() {
+    const locationPin = document.querySelector('*[data-xds="IconLocationPin"]');
+    const locationString = locationPin.parentNode.lastElementChild.textContent;
+    addInformationToResult('ort', locationString);
+}
 
 function getJobExpirience() {
     const jobs = getAllJobs();
@@ -31,6 +36,7 @@ function scrapeInformation() {
     searchForSalaryWish();
     searchForJobTitle();
     getJobExpirience();
+    getLocation();
     console.log(userData);
 }
 

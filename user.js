@@ -11,18 +11,23 @@
 // @grant        none
 // ==/UserScript==
 
+console.log('Loading bundle');
 const bundle = loadBundle();
-
-document.addEventListener('DOMContentLoaded', async () => {
+ready(async () => {
+    console.log('Dom content loaded');
     eval(await bundle); // eslint-disable-line
-    eval('console.log("pohuj");')
+    eval('console.log("pohuj");'); // eslint-disable-line
 });
 
 async function loadBundle() {
     const bundleURL = 'https://raw.githubusercontent.com/ChrisAnkowski/xi-scraper/main/dist/index.js';
-    const bundle = await (await fetch(bundleURL, { cache: 'no-store' })).text();
+    return await (await fetch(bundleURL, { cache: 'no-store' })).text();
+}
 
-    GM_setValue('bundle', bundle);
-
-    return bundle;
+function ready(fn) {
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        setTimeout(fn, 1500);
+    } else {
+        document.addEventListener("DOMContentLoaded", fn);
+    }
 }
