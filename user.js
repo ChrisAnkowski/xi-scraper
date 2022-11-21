@@ -11,10 +11,8 @@
 // @grant        none
 // ==/UserScript==
 
-console.log('Loading bundle');
 const bundle = loadBundle();
 ready(async () => {
-    console.log('Dom content loaded');
     eval(await bundle); // eslint-disable-line
     eval('console.log("pohuj");'); // eslint-disable-line
 });
