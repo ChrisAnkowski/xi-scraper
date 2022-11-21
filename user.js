@@ -15,6 +15,7 @@ const bundle = loadBundle();
 
 document.addEventListener('DOMContentLoaded', async () => {
     eval(await bundle); // eslint-disable-line
+    eval('console.log("pohuj");')
 });
 
 async function loadBundle() {
