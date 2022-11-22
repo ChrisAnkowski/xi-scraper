@@ -30,21 +30,27 @@ function getLocation() {
     addInformationToResult('city', locationString);
 }
 
-function getJobExpirience() {
-    const jobs = getAllJobs();
-}
-
 function extractYearsAsMonths(string) {
     const regexp = /(\d{0,2}) Jahr/g;
     const matches = string.matchAll(regexp);
-    let test = [];
+    let months = [];
     for (const match of matches) {
-    	test.push(Number(match[1]) * 12);
+    	months.push(Number(match[1]) * 12);
     }
-    return test
+    return months
 }
 
-function getAllJobs() {
+function extractMonths(string) {
+    const regexp = /(\d{0,2}) Monat/g;
+    const matches = string.matchAll(regexp);
+    let months = [];
+    for (const match of matches) {
+    	months.push(Number(match[1]));
+    }
+    return months
+}
+
+function getJobExpirience() {
     const section = document.getElementById('ProfileTimelineModule');
     const headline = [...section.querySelectorAll('*[data-xds="Headline"]')].filter(element => element.innerText.includes("Berufliche Stationen")).at(0);
     const ersteStationen = [...headline.parentNode.querySelectorAll(':scope > div')];
@@ -56,7 +62,26 @@ function getAllJobs() {
     mehrAnzeigenStationen.forEach((element) => {
         jobDuration.push(element.querySelector('p[data-xds="BodyCopy"]').nextElementSibling.innerText);
     })
-    console.log(extractYearsAsMonths(jobDuration.join(' ')));
+    const extractedYearsAsMonths = extractYearsAsMonths(jobDuration.join(' '));
+    const extractedMonths = extractMonths(jobDuration.join(' '));
+    const expirience = extractedYearsAsMonths.concat(extractedMonths).reduce((partialSum, a) => partialSum + a, 0);
+    addInformationToResult('expirience', getYearsString(expirience));
+}
+
+function getYearsString(monthCount) {
+    function getPlural(number, word) {
+        return number === 1 && word.one || word.other;
+    }
+
+    var months = { one: 'Monat', other: 'Monate' },
+        years = { one: 'Jahr', other: 'Jahre' },
+        m = monthCount % 12,
+        y = Math.floor(monthCount / 12),
+        result = [];
+
+    y && result.push(y + ' ' + getPlural(y, years));
+    m && result.push(m + ' ' + getPlural(m, months));
+    return result.join(' und ');
 }
 
 function scrapeInformation() {
@@ -65,6 +90,7 @@ function scrapeInformation() {
     searchForJobTitle();
     getJobExpirience();
     getLocation();
+    getJobExpirience();
     console.log(userData);
 }
 
