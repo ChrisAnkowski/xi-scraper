@@ -73,12 +73,14 @@ function getJobExperience() {
         .innerText
     );
   });
-  mehrAnzeigenStationen.forEach((element) => {
-    jobDuration.push(
-      element.querySelector('p[data-xds="BodyCopy"]').nextElementSibling
-        .innerText
-    );
-  });
+  if (!mehrAnzeigenStationen.at(0).parentElement.querySelector('h2').textContent.includes('Studium')) {
+    mehrAnzeigenStationen.forEach((element) => {
+      jobDuration.push(
+        element.querySelector('p[data-xds="BodyCopy"]').nextElementSibling
+          .innerText
+      );
+    });
+  }
   const extractedYearsAsMonths = extractYearsAsMonths(jobDuration.join(" "));
   const extractedMonths = extractMonths(jobDuration.join(" "));
   const experience = extractedYearsAsMonths
