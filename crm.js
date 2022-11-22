@@ -20,7 +20,8 @@ let fieldMap = {
   'Nachname': 'lastname',
   'Gehaltswunsch': 'salary',
   'Aktuelle Position': 'currentJob',
-  'Berufserfahrung': 'expirience',
+  'Berufserfahrung': 'experience',
+  'Ausbildung/Qualifikation': 'education',
   'Ort': 'city'
 };
 

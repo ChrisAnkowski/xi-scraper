@@ -8,12 +8,12 @@ ready(() => {
 });
 
 function scrapeInformation() {
-  searchForName();
-  searchForSalaryWish();
-  searchForJobTitle();
-  getJobExpirience();
+  getName();
+  getSalaryWish();
+  getJobTitle();
+  getJobExperience();
+  getEducation();
   getLocation();
-  getJobExpirience();
 
   copyTextToClipboard(JSON.stringify(userData));
 }
@@ -53,7 +53,7 @@ function getEducation() {
   addInformationToResult("education", education);
 }
 
-function getJobExpirience() {
+function getJobExperience() {
   const section = document.getElementById("ProfileTimelineModule");
   const headline = [...section.querySelectorAll('*[data-xds="Headline"]')]
     .filter((element) => element.innerText.includes("Berufliche Stationen"))
@@ -81,10 +81,10 @@ function getJobExpirience() {
   });
   const extractedYearsAsMonths = extractYearsAsMonths(jobDuration.join(" "));
   const extractedMonths = extractMonths(jobDuration.join(" "));
-  const expirience = extractedYearsAsMonths
+  const experience = extractedYearsAsMonths
     .concat(extractedMonths)
     .reduce((partialSum, a) => partialSum + a, 0);
-  addInformationToResult("expirience", getYearsString(expirience));
+  addInformationToResult("experience", getYearsString(experience));
 }
 
 function getYearsString(monthCount) {
@@ -103,7 +103,7 @@ function getYearsString(monthCount) {
   return result.join(" und ");
 }
 
-function searchForSalaryWish() {
+function getSalaryWish() {
   const allH2Array = [...document.querySelectorAll("h2")];
   const salaryHeadline = allH2Array.filter((element) =>
     element.textContent.includes("Gehaltsvorstellung")
@@ -117,7 +117,7 @@ function searchForSalaryWish() {
   }
 }
 
-function searchForName() {
+function getName() {
   const name = document
     .querySelector('#XingIdModule *[data-xds="Hero"]')
     .innerText.replace(/<(.|\n)*?>/g, "")
@@ -130,7 +130,7 @@ function searchForName() {
   addInformationToResult("lastname", nachname);
 }
 
-function searchForJobTitle() {
+function getJobTitle() {
   const jobTitleString = document
     .querySelector('#XingIdModule *[data-xds="Hero"]')
     .parentElement.nextElementSibling.querySelector("section p")
