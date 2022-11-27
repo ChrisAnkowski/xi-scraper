@@ -94,7 +94,7 @@ function getYearsString(monthCount) {
     return (number === 1 && word.one) || word.other;
   }
 
-  var months = { one: "Monat", other: "Monate" },
+  let months = { one: "Monat", other: "Monate" },
     years = { one: "Jahr", other: "Jahre" },
     m = monthCount % 12,
     y = Math.floor(monthCount / 12),
@@ -176,15 +176,15 @@ if (typeof Element.prototype.clearChildren === "undefined") {
 }
 
 function fallbackCopyTextToClipboard(text) {
-  var textArea = document.createElement("textarea");
+  const textArea = document.createElement("textarea");
   textArea.value = text;
   document.body.appendChild(textArea);
   textArea.focus();
   textArea.select();
 
   try {
-    var successful = document.execCommand("copy");
-    var msg = successful ? "successful" : "unsuccessful";
+    const successful = document.execCommand("copy");
+    const msg = successful ? "successful" : "unsuccessful";
     console.log("Fallback: Copying command was " + msg);
   } catch (err) {
     console.error("Fallback: Oops, unable to copy", err);
