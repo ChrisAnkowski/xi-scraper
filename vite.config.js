@@ -1,4 +1,4 @@
-import {defineConfig} from 'vite'
+import { defineConfig } from 'vite';
 
 export default defineConfig({
     build: {
@@ -9,8 +9,8 @@ export default defineConfig({
                     return '[name][extname]';
                 },
                 chunkFileNames: '[name].js',
-                entryFileNames: '[name].js',
-            },
-        },
-    },
-})
+                entryFileNames: '[name].js'
+            }
+        }
+    }
+});
