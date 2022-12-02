@@ -6,7 +6,7 @@ export default abstract class Scraper {
     moreButton: HTMLElement;
 
     constructor() {
-        const toast = new Toast(1000);
+        const toast = new Toast(5000);
         toast.show('test');
     }
 

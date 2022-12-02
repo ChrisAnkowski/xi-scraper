@@ -103,7 +103,7 @@ class Scraper {
   constructor() {
     __publicField(this, "userData");
     __publicField(this, "moreButton");
-    const toast = new Toast(1e3);
+    const toast = new Toast(5e3);
     toast.show("test");
   }
   scrape(moreButton) {
