@@ -46,8 +46,10 @@ var __publicField = (obj, key, value) => {
   }
 })();
 class Toast {
-  constructor() {
+  constructor(timeout) {
     __publicField(this, "toast", null);
+    __publicField(this, "timeout", 0);
+    this.timeout = timeout;
     this.injectStyle();
   }
   show(message) {
@@ -60,6 +62,11 @@ class Toast {
     setTimeout(() => {
       this.toast.classList.add("toast-show");
     }, 100);
+    if (this.timeout > 0) {
+      setTimeout(() => {
+        this.toast.classList.remove("toast-show");
+      }, this.timeout);
+    }
   }
   injectStyle() {
     const style = document.createElement("style");
@@ -96,17 +103,8 @@ class Scraper {
   constructor() {
     __publicField(this, "userData");
     __publicField(this, "moreButton");
-    const toast = new Toast();
+    const toast = new Toast(1e3);
     toast.show("test");
-    setTimeout(() => {
-      toast.close();
-      setTimeout(() => {
-        toast.show("test 2");
-        setTimeout(() => {
-          toast.close();
-        }, 2e3);
-      }, 2e3);
-    }, 2e3);
   }
   scrape(moreButton) {
     this.userData = {};

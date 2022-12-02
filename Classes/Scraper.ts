@@ -6,19 +6,8 @@ export default abstract class Scraper {
     moreButton: HTMLElement;
 
     constructor() {
-        const toast = new Toast();
+        const toast = new Toast(1000);
         toast.show('test');
-
-        setTimeout(() => {
-            toast.close();
-            setTimeout(() => {
-                toast.show('test 2');
-
-                setTimeout(() => {
-                    toast.close();
-                }, 2000);
-            }, 2000);
-        }, 2000);
     }
 
     public scrape(moreButton: HTMLElement): void {

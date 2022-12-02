@@ -1,11 +1,13 @@
 export default class Toast {
     toast = null;
+    timeout = 0;
 
-    constructor() {
+    constructor(timeout: number) {
+        this.timeout = timeout;
         this.injectStyle();
     }
 
-    public show(message) {
+    public show(message: string) {
         console.log('show');
         this.toast = document.createElement('div');
         this.toast.classList.add('toast');
@@ -15,6 +17,12 @@ export default class Toast {
         setTimeout(() => {
             this.toast.classList.add('toast-show');
         }, 100);
+
+        if (this.timeout > 0) {
+            setTimeout(() => {
+                this.toast.classList.remove('toast-show');
+            }, this.timeout);
+        }
     }
 
     public injectStyle() {
