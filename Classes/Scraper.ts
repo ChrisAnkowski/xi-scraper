@@ -4,11 +4,7 @@ import Toast from './Toast';
 export default abstract class Scraper {
     userData: IProfile;
     moreButton: HTMLElement;
-
-    constructor() {
-        const toast = new Toast(5000);
-        toast.show('test');
-    }
+    toast = new Toast(5000);
 
     public scrape(moreButton: HTMLElement): void {
         this.userData = {} as IProfile;
@@ -58,11 +54,10 @@ export default abstract class Scraper {
         textArea.select();
 
         try {
-            const successful = document.execCommand('copy');
-            const msg = successful ? 'successful' : 'unsuccessful';
-            console.log('Fallback: Copying command was ' + msg);
+            document.execCommand('copy');
+            this.toast.show('Copying to clipboard was successful!');
         } catch (err) {
-            console.error('Fallback: Oops, unable to copy', err);
+            this.toast.show('Could not copy text!');
         }
 
         document.body.removeChild(textArea);
@@ -74,11 +69,11 @@ export default abstract class Scraper {
             return;
         }
         navigator.clipboard.writeText(text).then(
-            function () {
-                console.log('Async: Copying to clipboard was successful!');
+            () => {
+                this.toast.show('Copying to clipboard was successful!');
             },
-            function (err) {
-                console.error('Async: Could not copy text: ', err);
+            () => {
+                this.toast.show('Could not copy text!');
             }
         );
     }
