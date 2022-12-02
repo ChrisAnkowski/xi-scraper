@@ -57,7 +57,7 @@ class Toast {
     this.toast.onclick = this.close;
     this.toast.textContent = message;
     this.toast.classList.remove("toast-show");
-    document.appendChild(this.toast);
+    document.body.appendChild(this.toast);
     console.log(this.toast);
   }
   injectStyle() {
