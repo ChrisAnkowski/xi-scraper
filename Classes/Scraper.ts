@@ -1,8 +1,14 @@
 import IProfile from '../Interfaces/IProfile';
+import Toast from './Toast';
 
 export default abstract class Scraper {
     userData: IProfile;
     moreButton: HTMLElement;
+
+    constructor() {
+        const toast = new Toast();
+        toast.show('test');
+    }
 
     public scrape(moreButton: HTMLElement): void {
         this.userData = {} as IProfile;
