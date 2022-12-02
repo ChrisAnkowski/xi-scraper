@@ -12,6 +12,7 @@ export default class Toast {
         this.toast.onclick = this.close;
         this.toast.textContent = message;
         this.toast.classList.remove('toast-show');
+        document.appendChild(this.toast);
         console.log(this.toast);
     }
 
@@ -29,6 +30,7 @@ export default class Toast {
               padding: 1rem 1.5rem;
               opacity: 0%;
               transition: all 0.5s linear;
+              z-index: 99999;
             }
             
             .toast-show {
