@@ -66,7 +66,7 @@ class Toast {
               display: flex;
               align-items: center;
               position: absolute;
-              top: 10px;
+              top: 80px;
               right: -500px;
               background-color: darkgray;
               border-radius: 5px;
@@ -96,6 +96,15 @@ class Scraper {
     __publicField(this, "moreButton");
     const toast = new Toast();
     toast.show("test");
+    setTimeout(() => {
+      toast.close();
+      setTimeout(() => {
+        toast.show("test 2");
+        setTimeout(() => {
+          toast.close();
+        }, 2e3);
+      }, 2e3);
+    }, 2e3);
   }
   scrape(moreButton) {
     this.userData = {};

@@ -22,7 +22,7 @@ export default class Toast {
               display: flex;
               align-items: center;
               position: absolute;
-              top: 10px;
+              top: 80px;
               right: -500px;
               background-color: darkgray;
               border-radius: 5px;
@@ -40,7 +40,7 @@ export default class Toast {
         document.head.appendChild(style);
     }
 
-    private close() {
+    public close() {
         this.toast.classList.remove('toast-show');
         setTimeout(() => {
             this.toast.remove();
