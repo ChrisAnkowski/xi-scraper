@@ -47,10 +47,11 @@ export default class LinkedinScraper extends Scraper {
     getEducation(): void {
         const mainContainer = document.getElementById('main');
         const headline = [...mainContainer.querySelectorAll('h2 span')].filter((element: HTMLElement) => element.innerText.includes('Ausbildung')).at(0);
-        const section = headline.closest('section');
-        const entry = [...section.querySelector('.pvs-list__outer-container > ul').children].at(0);
-        const entryText = entry.querySelector('div div:last-of-type div a > span:first-of-type').textContent.trim();
-        if (entryText) {
+
+        if (headline) {
+            const section = headline.closest('section');
+            const entry = [...section.querySelector('.pvs-list__outer-container > ul').children].at(0);
+            const entryText = entry.querySelector('div div:last-of-type div a > span:first-of-type').textContent.trim();
             this.addInformationToResult('education', entryText);
         } else {
             this.addInformationToResult('education', 'Nicht gefunden');
