@@ -157,7 +157,10 @@ class LinkedinScraper extends Scraper {
   getLocation() {
     const locationElement = document.querySelector("#main h1").parentElement.parentElement.parentElement.lastElementChild.querySelector("span:first-of-type");
     if (locationElement !== null) {
-      const locationString = locationElement.innerText.replace(/<(.|\n)*?>/g, "").split("\n")[0].trim();
+      let locationString = locationElement.innerText.replace(/<(.|\n)*?>/g, "").split("\n")[0].trim();
+      if (locationString.includes(",")) {
+        locationString = locationString.split(",").at(0);
+      }
       this.addInformationToResult("city", locationString);
     } else {
       this.addInformationToResult("city", "Nicht gefunden");

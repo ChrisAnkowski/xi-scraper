@@ -63,10 +63,13 @@ export default class LinkedinScraper extends Scraper {
             .querySelector('#main h1')
             .parentElement.parentElement.parentElement.lastElementChild.querySelector('span:first-of-type');
         if (locationElement !== null) {
-            const locationString = (locationElement as HTMLElement).innerText
+            let locationString = (locationElement as HTMLElement).innerText
                 .replace(/<(.|\n)*?>/g, '')
                 .split('\n')[0]
                 .trim();
+            if (locationString.includes(',')) {
+                locationString = locationString.split(',').at(0);
+            }
             this.addInformationToResult('city', locationString);
         } else {
             this.addInformationToResult('city', 'Nicht gefunden');
