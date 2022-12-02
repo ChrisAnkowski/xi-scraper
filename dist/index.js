@@ -1,2 +1,317 @@
-var f=Object.defineProperty;var p=(a,o,e)=>o in a?f(a,o,{enumerable:!0,configurable:!0,writable:!0,value:e}):a[o]=e;var m=(a,o,e)=>(p(a,typeof o!="symbol"?o+"":o,e),e);(function(){const o=document.createElement("link").relList;if(o&&o.supports&&o.supports("modulepreload"))return;for(const t of document.querySelectorAll('link[rel="modulepreload"]'))n(t);new MutationObserver(t=>{for(const i of t)if(i.type==="childList")for(const r of i.addedNodes)r.tagName==="LINK"&&r.rel==="modulepreload"&&n(r)}).observe(document,{childList:!0,subtree:!0});function e(t){const i={};return t.integrity&&(i.integrity=t.integrity),t.referrerpolicy&&(i.referrerPolicy=t.referrerpolicy),t.crossorigin==="use-credentials"?i.credentials="include":t.crossorigin==="anonymous"?i.credentials="omit":i.credentials="same-origin",i}function n(t){if(t.ep)return;t.ep=!0;const i=e(t);fetch(t.href,i)}})();class g{constructor(){m(this,"userData");m(this,"moreButton")}scrape(o){this.userData={},this.moreButton=o,this.addScrapeButton()}addScrapeButton(){const o=document.createElement("button");o.innerText="Profilinformationen kopieren",o.onclick=this.scrapeInformation.bind(this),this.insertAfter(o,this.moreButton)}scrapeInformation(){this.getName(),this.getSalaryWish(),this.getJobTitle(),this.getJobExperience(),this.getEducation(),this.getLocation(),this.copyTextToClipboard(JSON.stringify(this.userData))}addInformationToResult(o,e){this.userData[o]=e}fallbackCopyTextToClipboard(o){const e=document.createElement("textarea");e.value=o,document.body.appendChild(e),e.focus(),e.select();try{const t=document.execCommand("copy")?"successful":"unsuccessful";console.log("Fallback: Copying command was "+t)}catch(n){console.error("Fallback: Oops, unable to copy",n)}document.body.removeChild(e)}copyTextToClipboard(o){if(!navigator.clipboard){this.fallbackCopyTextToClipboard(o);return}navigator.clipboard.writeText(o).then(function(){console.log("Async: Copying to clipboard was successful!")},function(e){console.error("Async: Could not copy text: ",e)})}insertAfter(o,e){e&&e.parentNode&&e.parentNode.insertBefore(o,e.nextSibling)}}class y extends g{constructor(){super(...arguments);m(this,"userData",{})}getName(){console.log("getName")}getSalaryWish(){console.log("getSalaryWish")}getJobTitle(){console.log("getJobTitle")}getJobExperience(){console.log("getJobExperience")}getEducation(){console.log("getEducation")}getLocation(){console.log("getLocation")}}class x extends g{constructor(){super(...arguments);m(this,"userData",{})}getName(){const e=document.querySelector('#XingIdModule *[data-xds="Hero"]');if(e!==null){const t=e.innerText.replace(/<(.|\n)*?>/g,"").split(`
-`)[0].trim().split(" "),i=t.pop(),r=typeof t=="string"?t:t.join(" ");this.addInformationToResult("firstname",r),this.addInformationToResult("lastname",i)}else this.addInformationToResult("firstname","Nicht gefunden"),this.addInformationToResult("lastname","Nicht gefunden")}getSalaryWish(){const n=[...document.querySelectorAll("h2")].filter(t=>t.textContent.includes("Gehaltsvorstellung"));if(n.length>0){const i=n[0].nextElementSibling.textContent;this.addInformationToResult("salary",i)}else this.addInformationToResult("salary","Nicht angegeben")}getJobTitle(){const e=document.querySelector('#XingIdModule *[data-xds="Hero"]').parentElement.nextElementSibling.querySelector("section p").textContent.split(",");let n=e[1];e.includes("Student")&&(n=e[0]+" "+e[1]),this.addInformationToResult("currentJob",n.trim())}getJobExperience(){const n=[...document.getElementById("ProfileTimelineModule").querySelectorAll('*[data-xds="Headline"]')].filter(s=>s.innerText.includes("Berufliche Stationen")).at(0),t=[...n.parentNode.querySelectorAll(":scope > div")],i=[...n.parentNode.nextSibling.querySelectorAll('*[data-qa="bucket"]:first-child > div')];let r=[];t.forEach(s=>{const l=s.querySelector('p[data-xds="BodyCopy"]');if(l){const u=l.nextElementSibling;u&&r.push(u.innerText)}}),i.at(0).parentElement.querySelector("h2").textContent.includes("Studium")||i.forEach(s=>{const l=s.querySelector('p[data-xds="BodyCopy"]');if(l){const u=l.nextElementSibling;u&&r.push(u.innerText)}});const c=this.extractYearsAsMonths(r.join(" ")),d=this.extractMonths(r.join(" ")),h=c.concat(d).reduce((s,l)=>s+l,0);this.addInformationToResult("experience",this.getYearsString(h))}getEducation(){const t=[...document.getElementById("ProfileTimelineModule").querySelectorAll('*[data-xds="Headline"]')].filter(i=>i.innerText.includes("Studium")).at(0).nextElementSibling.querySelector("h2").innerText;this.addInformationToResult("education",t)}getLocation(){const n=document.querySelector('*[data-xds="IconLocationPin"]').parentNode.lastElementChild.textContent;this.addInformationToResult("city",n)}addInformationToResult(e,n){this.userData[e]=n}insertAfter(e,n){n&&n.parentNode&&n.parentNode.insertBefore(e,n.nextSibling)}extractYearsAsMonths(e){const n=/(\d{0,2}) Jahr/g,t=e.matchAll(n);let i=[];for(const r of t)i.push(Number(r[1])*12);return i}extractMonths(e){const n=/(\d{0,2}) Monat/g,t=e.matchAll(n);let i=[];for(const r of t)i.push(Number(r[1]));return i}getYearsString(e){function n(h,s){return h===1&&s.one||s.other}let t={one:"Monat",other:"Monate"},i={one:"Jahr",other:"Jahre"},r=e%12,c=Math.floor(e/12),d=[];return c&&d.push(c+" "+n(c,i)),r&&d.push(r+" "+n(r,t)),d.join(" und ")}}class S{constructor(){this.xing&&new x().scrape(document.querySelector('*[data-qa="more-button"]')),this.linkedIn&&new y().scrape(document.querySelector('li-icon[type="bell-outline"]').parentElement.parentElement)}get xing(){return this.detectWebsite.includes("xing")}get linkedIn(){return this.detectWebsite.includes("linkedin")}get detectWebsite(){return window.location.href}}b(()=>{new S});function b(a){document.readyState==="complete"||document.readyState==="interactive"?setTimeout(a,1500):document.addEventListener("DOMContentLoaded",a)}
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+(function polyfill() {
+  const relList = document.createElement("link").relList;
+  if (relList && relList.supports && relList.supports("modulepreload")) {
+    return;
+  }
+  for (const link of document.querySelectorAll('link[rel="modulepreload"]')) {
+    processPreload(link);
+  }
+  new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type !== "childList") {
+        continue;
+      }
+      for (const node of mutation.addedNodes) {
+        if (node.tagName === "LINK" && node.rel === "modulepreload")
+          processPreload(node);
+      }
+    }
+  }).observe(document, { childList: true, subtree: true });
+  function getFetchOpts(script) {
+    const fetchOpts = {};
+    if (script.integrity)
+      fetchOpts.integrity = script.integrity;
+    if (script.referrerpolicy)
+      fetchOpts.referrerPolicy = script.referrerpolicy;
+    if (script.crossorigin === "use-credentials")
+      fetchOpts.credentials = "include";
+    else if (script.crossorigin === "anonymous")
+      fetchOpts.credentials = "omit";
+    else
+      fetchOpts.credentials = "same-origin";
+    return fetchOpts;
+  }
+  function processPreload(link) {
+    if (link.ep)
+      return;
+    link.ep = true;
+    const fetchOpts = getFetchOpts(link);
+    fetch(link.href, fetchOpts);
+  }
+})();
+class Scraper {
+  constructor() {
+    __publicField(this, "userData");
+    __publicField(this, "moreButton");
+  }
+  scrape(moreButton) {
+    this.userData = {};
+    this.moreButton = moreButton;
+    this.addScrapeButton();
+  }
+  addScrapeButton() {
+    const button = document.createElement("button");
+    button.innerText = "Profilinformationen kopieren";
+    button.onclick = this.scrapeInformation.bind(this);
+    this.insertAfter(button, this.moreButton);
+  }
+  scrapeInformation() {
+    this.getName();
+    this.getSalaryWish();
+    this.getJobTitle();
+    this.getJobExperience();
+    this.getEducation();
+    this.getLocation();
+    this.copyTextToClipboard(JSON.stringify(this.userData));
+  }
+  addInformationToResult(key, info) {
+    this.userData[key] = info;
+  }
+  fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      const successful = document.execCommand("copy");
+      const msg = successful ? "successful" : "unsuccessful";
+      console.log("Fallback: Copying command was " + msg);
+    } catch (err) {
+      console.error("Fallback: Oops, unable to copy", err);
+    }
+    document.body.removeChild(textArea);
+  }
+  copyTextToClipboard(text) {
+    if (!navigator.clipboard) {
+      this.fallbackCopyTextToClipboard(text);
+      return;
+    }
+    navigator.clipboard.writeText(text).then(
+      function() {
+        console.log("Async: Copying to clipboard was successful!");
+      },
+      function(err) {
+        console.error("Async: Could not copy text: ", err);
+      }
+    );
+  }
+  insertAfter(newNode, referenceNode) {
+    if (referenceNode && referenceNode.parentNode) {
+      referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+  }
+}
+class LinkedinScraper extends Scraper {
+  constructor() {
+    super(...arguments);
+    __publicField(this, "userData", {});
+  }
+  getName() {
+    const nameElement = document.querySelector("#main h1");
+    if (nameElement !== null) {
+      const name = nameElement.innerText.replace(/<(.|\n)*?>/g, "").split("\n")[0].trim();
+      const nameSplit = name.split(" ");
+      const nachname = nameSplit.pop();
+      const vorname = typeof nameSplit === "string" ? nameSplit : nameSplit.join(" ");
+      this.addInformationToResult("firstname", vorname);
+      this.addInformationToResult("lastname", nachname);
+    } else {
+      this.addInformationToResult("firstname", "Nicht gefunden");
+      this.addInformationToResult("lastname", "Nicht gefunden");
+    }
+  }
+  getSalaryWish() {
+    this.addInformationToResult("salary", "Nicht angegeben");
+  }
+  getJobTitle() {
+    const titleElement = document.querySelector("#main h1").parentNode.parentNode.lastElementChild;
+    if (titleElement !== null) {
+      const jobTitle = titleElement.innerText.replace(/<(.|\n)*?>/g, "").split("\n")[0].trim();
+      this.addInformationToResult("currentJob", jobTitle);
+    } else {
+      this.addInformationToResult("currentJob", "Nicht angegeben");
+    }
+  }
+  getJobExperience() {
+    this.addInformationToResult("experience", "Nicht gefunden");
+  }
+  getEducation() {
+    const mainContainer = document.getElementById("main");
+    const headline = [...mainContainer.querySelectorAll("h2 span")].filter((element) => element.innerText.includes("Ausbildung")).at(0);
+    const section = headline.closest("section");
+    const entry = [...section.querySelector(".pvs-list__outer-container > ul").children].at(0);
+    const entryText = entry.querySelector("div div:last-of-type div a > span:first-of-type").textContent.trim();
+    if (entryText) {
+      this.addInformationToResult("education", entryText);
+    } else {
+      this.addInformationToResult("education", "Nicht gefunden");
+    }
+  }
+  getLocation() {
+    const locationElement = document.querySelector("#main h1").parentElement.parentElement.parentElement.lastElementChild.querySelector("span:first-of-type");
+    if (locationElement !== null) {
+      const locationString = locationElement.innerText.replace(/<(.|\n)*?>/g, "").split("\n")[0].trim();
+      this.addInformationToResult("city", locationString);
+    } else {
+      this.addInformationToResult("city", "Nicht gefunden");
+    }
+  }
+}
+class XingScraper extends Scraper {
+  constructor() {
+    super(...arguments);
+    __publicField(this, "userData", {});
+  }
+  getName() {
+    const nameElement = document.querySelector('#XingIdModule *[data-xds="Hero"]');
+    if (nameElement !== null) {
+      const name = nameElement.innerText.replace(/<(.|\n)*?>/g, "").split("\n")[0].trim();
+      const nameSplit = name.split(" ");
+      const nachname = nameSplit.pop();
+      const vorname = typeof nameSplit === "string" ? nameSplit : nameSplit.join(" ");
+      this.addInformationToResult("firstname", vorname);
+      this.addInformationToResult("lastname", nachname);
+    } else {
+      this.addInformationToResult("firstname", "Nicht gefunden");
+      this.addInformationToResult("lastname", "Nicht gefunden");
+    }
+  }
+  getSalaryWish() {
+    const allH2Array = [...document.querySelectorAll("h2")];
+    const salaryHeadline = allH2Array.filter((element) => element.textContent.includes("Gehaltsvorstellung"));
+    if (salaryHeadline.length > 0) {
+      const salaryHeadlineSibling = salaryHeadline[0].nextElementSibling;
+      const salaryWish = salaryHeadlineSibling.textContent;
+      this.addInformationToResult("salary", salaryWish);
+    } else {
+      this.addInformationToResult("salary", "Nicht angegeben");
+    }
+  }
+  getJobTitle() {
+    const jobTitleString = document.querySelector('#XingIdModule *[data-xds="Hero"]').parentElement.nextElementSibling.querySelector("section p").textContent.split(",");
+    if (jobTitleString) {
+      let jobTitle = jobTitleString[1];
+      if (jobTitleString.includes("Student")) {
+        jobTitle = jobTitleString[0] + " " + jobTitleString[1];
+      }
+      this.addInformationToResult("currentJob", jobTitle.trim());
+    } else {
+      this.addInformationToResult("currentJob", "Nicht angegeben");
+    }
+  }
+  getJobExperience() {
+    const section = document.getElementById("ProfileTimelineModule");
+    const headline = [...section.querySelectorAll('*[data-xds="Headline"]')].filter((element) => element.innerText.includes("Berufliche Stationen")).at(0);
+    const ersteStationen = [...headline.parentNode.querySelectorAll(":scope > div")];
+    const mehrAnzeigenStationen = [...headline.parentNode.nextSibling.querySelectorAll('*[data-qa="bucket"]:first-child > div')];
+    let jobDuration = [];
+    ersteStationen.forEach((element) => {
+      const durationElement = element.querySelector('p[data-xds="BodyCopy"]');
+      if (durationElement) {
+        const durationElementSibling = durationElement.nextElementSibling;
+        if (durationElementSibling) {
+          jobDuration.push(durationElementSibling.innerText);
+        }
+      }
+    });
+    if (!mehrAnzeigenStationen.at(0).parentElement.querySelector("h2").textContent.includes("Studium")) {
+      mehrAnzeigenStationen.forEach((element) => {
+        const durationElement = element.querySelector('p[data-xds="BodyCopy"]');
+        if (durationElement) {
+          const durationElementSibling = durationElement.nextElementSibling;
+          if (durationElementSibling) {
+            jobDuration.push(durationElementSibling.innerText);
+          }
+        }
+      });
+    }
+    const extractedYearsAsMonths = this.extractYearsAsMonths(jobDuration.join(" "));
+    const extractedMonths = this.extractMonths(jobDuration.join(" "));
+    const experience = extractedYearsAsMonths.concat(extractedMonths).reduce((partialSum, a) => partialSum + a, 0);
+    this.addInformationToResult("experience", this.getYearsString(experience));
+  }
+  getEducation() {
+    const section = document.getElementById("ProfileTimelineModule");
+    const headline = [...section.querySelectorAll('*[data-xds="Headline"]')].filter((element) => element.innerText.includes("Studium")).at(0);
+    const education = headline.nextElementSibling.querySelector("h2").innerText;
+    this.addInformationToResult("education", education);
+  }
+  getLocation() {
+    const locationPin = document.querySelector('*[data-xds="IconLocationPin"]');
+    const locationString = locationPin.parentNode.lastElementChild.textContent;
+    this.addInformationToResult("city", locationString);
+  }
+  addInformationToResult(key, info) {
+    this.userData[key] = info;
+  }
+  insertAfter(newNode, referenceNode) {
+    if (referenceNode && referenceNode.parentNode) {
+      referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+  }
+  extractYearsAsMonths(string) {
+    const regexp = /(\d{0,2}) Jahr/g;
+    const matches = string.matchAll(regexp);
+    let months = [];
+    for (const match of matches) {
+      months.push(Number(match[1]) * 12);
+    }
+    return months;
+  }
+  extractMonths(string) {
+    const regexp = /(\d{0,2}) Monat/g;
+    const matches = string.matchAll(regexp);
+    let months = [];
+    for (const match of matches) {
+      months.push(Number(match[1]));
+    }
+    return months;
+  }
+  getYearsString(monthCount) {
+    function getPlural(number, word) {
+      return number === 1 && word.one || word.other;
+    }
+    let months = { one: "Monat", other: "Monate" }, years = { one: "Jahr", other: "Jahre" }, m = monthCount % 12, y = Math.floor(monthCount / 12), result = [];
+    y && result.push(y + " " + getPlural(y, years));
+    m && result.push(m + " " + getPlural(m, months));
+    return result.join(" und ");
+  }
+}
+class Controller {
+  constructor() {
+    if (this.xing) {
+      const xingScraper = new XingScraper();
+      xingScraper.scrape(document.querySelector('*[data-qa="more-button"]'));
+    }
+    if (this.linkedIn) {
+      const linkedinScraper = new LinkedinScraper();
+      linkedinScraper.scrape(document.querySelector('li-icon[type="bell-outline"]').parentElement.parentElement);
+    }
+  }
+  get xing() {
+    return this.detectWebsite.includes("xing");
+  }
+  get linkedIn() {
+    return this.detectWebsite.includes("linkedin");
+  }
+  get detectWebsite() {
+    return window.location.href;
+  }
+}
+ready(() => {
+  new Controller();
+});
+function ready(eventListener) {
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(eventListener, 1500);
+  } else {
+    document.addEventListener("DOMContentLoaded", eventListener);
+  }
+}

@@ -11,6 +11,7 @@ export default defineConfig({
                 chunkFileNames: '[name].js',
                 entryFileNames: '[name].js'
             }
-        }
+        },
+        minify: false
     }
 });

@@ -40,11 +40,15 @@ export default class XingScraper extends Scraper {
             .querySelector('#XingIdModule *[data-xds="Hero"]')
             .parentElement.nextElementSibling.querySelector('section p')
             .textContent.split(',');
-        let jobTitle = jobTitleString[1];
-        if (jobTitleString.includes('Student')) {
-            jobTitle = jobTitleString[0] + ' ' + jobTitleString[1];
+        if (jobTitleString) {
+            let jobTitle = jobTitleString[1];
+            if (jobTitleString.includes('Student')) {
+                jobTitle = jobTitleString[0] + ' ' + jobTitleString[1];
+            }
+            this.addInformationToResult('currentJob', jobTitle.trim());
+        } else {
+            this.addInformationToResult('currentJob', 'Nicht angegeben');
         }
-        this.addInformationToResult('currentJob', jobTitle.trim());
     }
 
     getJobExperience(): void {
