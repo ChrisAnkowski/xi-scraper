@@ -12,7 +12,9 @@ export default class Toast {
         this.toast.onclick = this.close;
         this.toast.textContent = message;
         document.body.appendChild(this.toast);
-        this.toast.classList.add('toast-show');
+        setTimeout(() => {
+            this.toast.classList.add('toast-show');
+        }, 100);
     }
 
     public injectStyle() {
