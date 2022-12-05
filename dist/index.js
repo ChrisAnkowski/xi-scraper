@@ -123,6 +123,7 @@ class Scraper {
     const button = document.createElement("button");
     button.innerText = "Profilinformationen kopieren";
     button.onclick = this.scrapeInformation.bind(this);
+    console.log(this.moreButton);
     this.insertAfter(button, this.moreButton);
   }
   scrapeInformation() {
