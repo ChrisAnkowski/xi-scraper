@@ -6,13 +6,13 @@ export default class Controller {
         if (this.xing) {
             console.log('Xing detected');
             const xingScraper = new XingScraper();
-            xingScraper.scrape(document.querySelector('*[data-qa="more-button"]'));
+            xingScraper.scrape($('*[data-qa="more-button"]'));
         }
 
         if (this.linkedIn) {
             console.log('LinkedIn detected');
             const linkedinScraper = new LinkedinScraper();
-            linkedinScraper.scrape(document.querySelector('li-icon[type="bell-outline"]').parentElement.parentElement);
+            linkedinScraper.scrape($('li-icon[type="bell-outline"]').parentElement.parentElement);
         }
     }
 
