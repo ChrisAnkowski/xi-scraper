@@ -103,21 +103,26 @@ function findAncestor(el, sel) {
 
 function fillInForm() {
     const allInputs = [...document.querySelectorAll('#card-Allgemeines section input')];
+    let timeout = 0;
     allInputs.forEach((input) => {
         const labelName = findAncestor(input, '.field').innerText;
-        const labelKey = fieldMap[labelName];
-        const dataValue = data[labelKey];
-        if (!dataValue) {
-            return;
-        }
-        input.focus();
-        setTimeout(() => {
+        if (fieldMap[labelName] !== undefined) {
+            timeout++;
+            input.value = '.';
+            const labelKey = fieldMap[labelName];
+            const dataValue = data[labelKey];
+            if (!dataValue) {
+                return;
+            }
+            input.focus();
+            input.value = '';
             input.value = dataValue;
-        }, 1);
+            input.blur();
+        }
     });
     setTimeout(() => {
         document.body.scrollTo({ top: 0 });
-    }, allInputs.length * 2);
+    }, timeout * 10);
 }
 
 async function getClipboardContent() {
