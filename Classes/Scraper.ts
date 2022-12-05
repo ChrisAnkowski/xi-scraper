@@ -6,7 +6,7 @@ export default abstract class Scraper {
     moreButton: HTMLElement;
     toast = new Toast(5000);
 
-    public scrape(moreButton: HTMLElement): void {
+    public scrape(moreButton: any): void {
         this.userData = {} as IProfile;
         this.moreButton = moreButton;
         this.addScrapeButton();
@@ -19,6 +19,7 @@ export default abstract class Scraper {
             .click(() => {
                 this.scrapeInformation();
             });
+        console.log(button);
         this.moreButton.after(button);
     }
 

@@ -123,6 +123,7 @@ class Scraper {
     const button = $("<button></button>").text("Profilinformationen kopieren").click(() => {
       this.scrapeInformation();
     });
+    console.log(button);
     this.moreButton.after(button);
   }
   scrapeInformation() {
