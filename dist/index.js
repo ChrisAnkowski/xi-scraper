@@ -124,7 +124,7 @@ class Scraper {
       this.scrapeInformation();
     });
     console.log(button);
-    this.moreButton.after(button);
+    this.moreButton.append(button);
   }
   scrapeInformation() {
     try {
