@@ -115,14 +115,21 @@ function fillInForm() {
                 return;
             }
             input.focus();
-            input.value = '';
-            input.value = dataValue;
-            input.blur();
+            setTimeout(() => {
+                input.blur();
+                setTimeout(() => {
+                    input.value = '';
+                    input.value = dataValue;
+                    input.blur();
+                    input.value = dataValue;
+                    input.blur();
+                }, 10);
+            }, 10);
         }
     });
     setTimeout(() => {
         document.body.scrollTo({ top: 0 });
-    }, timeout * 10);
+    }, 1);
 }
 
 async function getClipboardContent() {
