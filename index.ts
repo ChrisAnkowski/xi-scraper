@@ -92,5 +92,6 @@ import Controller from './Classes/Controller';
 })('docReady', window);
 
 docReady(function () {
+    console.log('Dom ready');
     new Controller();
 });

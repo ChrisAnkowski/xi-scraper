@@ -430,5 +430,6 @@ class Controller {
   };
 })("docReady", window);
 docReady(function() {
+  console.log("Dom ready");
   new Controller();
 });
