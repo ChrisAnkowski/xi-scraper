@@ -7,11 +7,11 @@ export default class Toast {
         this.injectStyle();
     }
 
-    public show(message: string) {
-        console.log('show');
+    public show(message: string, type: 'error' | 'success' = 'error') {
         this.toast = document.createElement('div');
         this.toast.classList.add('toast');
-        this.toast.onclick = this.close;
+        this.toast.classList.add('toast-' + type);
+        this.toast.onclick = this.close.bind(this);
         this.toast.textContent = message;
         document.body.appendChild(this.toast);
         setTimeout(() => {
@@ -31,15 +31,24 @@ export default class Toast {
             .toast {
               display: flex;
               align-items: center;
-              position: absolute;
+              position: fixed;
               top: 80px;
               right: -500px;
-              background-color: darkgray;
               border-radius: 5px;
               padding: 1rem 1.5rem;
               opacity: 0%;
               transition: all 0.5s linear;
               z-index: 99999;
+            }
+            
+            .toast-error {
+              background-color: #FF4136;
+              color: #800600;
+            }
+            
+            .toast-success {
+              background-color: #2ECC40;
+              color: #0e3e14;
             }
             
             .toast-show {

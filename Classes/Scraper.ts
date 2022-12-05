@@ -20,14 +20,19 @@ export default abstract class Scraper {
     }
 
     protected scrapeInformation(): void {
-        this.getName();
-        this.getSalaryWish();
-        this.getJobTitle();
-        this.getJobExperience();
-        this.getEducation();
-        this.getLocation();
+        try {
+            this.getName();
+            this.getSalaryWish();
+            this.getJobTitle();
+            this.getJobExperience();
+            this.getEducation();
+            this.getLocation();
 
-        this.copyTextToClipboard(JSON.stringify(this.userData));
+            this.copyTextToClipboard(JSON.stringify(this.userData));
+        } catch (e) {
+            this.toast.show('Es gab einen Fehler!');
+            console.error(e);
+        }
     }
 
     protected abstract getName(): void;
@@ -55,9 +60,9 @@ export default abstract class Scraper {
 
         try {
             document.execCommand('copy');
-            this.toast.show('Copying to clipboard was successful!');
+            this.toast.show('Kopieren der Daten war erfolgreich!', 'success');
         } catch (err) {
-            this.toast.show('Could not copy text!');
+            this.toast.show('Es gab ein Fehler beim kopieren der Daten!');
         }
 
         document.body.removeChild(textArea);
@@ -70,10 +75,10 @@ export default abstract class Scraper {
         }
         navigator.clipboard.writeText(text).then(
             () => {
-                this.toast.show('Copying to clipboard was successful!');
+                this.toast.show('Kopieren der Daten war erfolgreich!', 'success');
             },
             () => {
-                this.toast.show('Could not copy text!');
+                this.toast.show('Es gab ein Fehler beim kopieren der Daten!');
             }
         );
     }

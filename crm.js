@@ -113,11 +113,11 @@ function fillInForm() {
         input.focus();
         setTimeout(() => {
             input.value = dataValue;
-        }, 100);
+        }, 1);
     });
     setTimeout(() => {
         document.body.scrollTo({ top: 0 });
-    }, allInputs.length * 100);
+    }, allInputs.length * 2);
 }
 
 async function getClipboardContent() {

@@ -5,82 +5,68 @@ export default class XingScraper extends Scraper {
     userData = {} as IProfile;
 
     getName(): void {
-        try {
-            const nameElement: HTMLElement | null = document.querySelector('#XingIdModule *[data-xds="Hero"]');
-            if (nameElement !== null) {
-                const name = nameElement.innerText
-                    .replace(/<(.|\n)*?>/g, '')
-                    .split('\n')[0]
-                    .trim();
-                const nameSplit = name.split(' ');
-                const nachname: string = nameSplit.pop();
-                const vorname: string = typeof nameSplit === 'string' ? nameSplit : nameSplit.join(' ');
-
-                this.addInformationToResult('firstname', vorname);
-                this.addInformationToResult('lastname', nachname);
-            } else {
-                this.addInformationToResult('firstname', 'Nicht gefunden');
-                this.addInformationToResult('lastname', 'Nicht gefunden');
-            }
-        } catch (e) {
-            this.toast.show('Es gab einen Fehler!');
+        const nameElement: HTMLElement | null = document.querySelector('#XingIdModule *[data-xds="Hero"]');
+        if (!nameElement) {
+            throw new Error('Error');
         }
+        const name = nameElement.innerText
+            .replace(/<(.|\n)*?>/g, '')
+            .split('\n')[0]
+            .trim();
+        const nameSplit = name.split(' ');
+        const nachname: string = nameSplit.pop();
+        const vorname: string = typeof nameSplit === 'string' ? nameSplit : nameSplit.join(' ');
+
+        this.addInformationToResult('firstname', vorname);
+        this.addInformationToResult('lastname', nachname);
     }
 
     getSalaryWish(): void {
-        try {
-            const allH2Array = [...document.querySelectorAll('h2')];
-            const salaryHeadline = allH2Array.filter((element) => element.textContent.includes('Gehaltsvorstellung'));
-            if (salaryHeadline.length > 0) {
-                const salaryHeadlineSibling = salaryHeadline[0].nextElementSibling;
-                const salaryWish = salaryHeadlineSibling.textContent;
-                this.addInformationToResult('salary', salaryWish);
-            } else {
-                this.addInformationToResult('salary', 'Nicht angegeben');
-            }
-        } catch (e) {
-            this.toast.show('Es gab einen Fehler!');
+        const allH2Array = [...document.querySelectorAll('h2')];
+        const salaryHeadline = allH2Array.filter((element) => element.textContent.includes('Gehaltsvorstellung'));
+        if (salaryHeadline.length > 0) {
+            const salaryHeadlineSibling = salaryHeadline[0].nextElementSibling;
+            const salaryWish = salaryHeadlineSibling.textContent;
+            this.addInformationToResult('salary', salaryWish);
+        } else {
+            this.addInformationToResult('salary', 'Nicht angegeben');
         }
     }
 
     getJobTitle(): void {
-        try {
-            const jobTitleString = document
-                .querySelector('#XingIdModule *[data-xds="Hero"]')
-                .parentElement.nextElementSibling.querySelector('section p')
-                .textContent.split(',');
-            if (jobTitleString) {
-                let jobTitle = jobTitleString[1];
-                if (jobTitleString.includes('Student')) {
-                    jobTitle = jobTitleString[0] + ' ' + jobTitleString[1];
-                }
-                this.addInformationToResult('currentJob', jobTitle.trim());
-            } else {
-                this.addInformationToResult('currentJob', 'Nicht angegeben');
+        const jobTitleString = document
+            .querySelector('#XingIdModule *[data-xds="Hero"]')
+            .parentElement.nextElementSibling.querySelector('section p')
+            .textContent.split(',');
+        if (jobTitleString) {
+            let jobTitle = jobTitleString[1];
+            if (jobTitleString.includes('Student')) {
+                jobTitle = jobTitleString[0] + ' ' + jobTitleString[1];
             }
-        } catch (e) {
-            this.toast.show('Es gab einen Fehler!');
+            this.addInformationToResult('currentJob', jobTitle.trim());
+        } else {
+            throw new Error('Error');
         }
     }
 
     getJobExperience(): void {
-        try {
-            const section = document.getElementById('ProfileTimelineModule');
-            const headline = [...section.querySelectorAll('*[data-xds="Headline"]')]
-                .filter((element: HTMLElement) => element.innerText.includes('Berufliche Stationen'))
-                .at(0);
-            const ersteStationen = [...headline.parentNode.querySelectorAll(':scope > div')];
-            const mehrAnzeigenStationen = [...(headline.parentNode.nextSibling as HTMLElement).querySelectorAll('*[data-qa="bucket"]:first-child > div')];
-            let jobDuration = [];
-            ersteStationen.forEach((element) => {
-                const durationElement: HTMLElement = element.querySelector('p[data-xds="BodyCopy"]');
-                if (durationElement) {
-                    const durationElementSibling = durationElement.nextElementSibling as HTMLElement;
-                    if (durationElementSibling) {
-                        jobDuration.push(durationElementSibling.innerText);
-                    }
+        const section = document.getElementById('ProfileTimelineModule');
+        const headline = [...section.querySelectorAll('*[data-xds="Headline"]')]
+            .filter((element: HTMLElement) => element.innerText.includes('Berufliche Stationen'))
+            .at(0);
+        const ersteStationen = [...headline.parentNode.querySelectorAll(':scope > div')];
+        const mehrAnzeigenStationen = [...(headline.parentNode.nextSibling as HTMLElement).querySelectorAll('*[data-qa="bucket"]:first-child > div')];
+        let jobDuration = [];
+        ersteStationen.forEach((element) => {
+            const durationElement: HTMLElement = element.querySelector('p[data-xds="BodyCopy"]');
+            if (durationElement) {
+                const durationElementSibling = durationElement.nextElementSibling as HTMLElement;
+                if (durationElementSibling) {
+                    jobDuration.push(durationElementSibling.innerText);
                 }
-            });
+            }
+        });
+        if (mehrAnzeigenStationen.length > 0) {
             if (!mehrAnzeigenStationen.at(0).parentElement.querySelector('h2').textContent.includes('Studium')) {
                 mehrAnzeigenStationen.forEach((element) => {
                     const durationElement: HTMLElement = element.querySelector('p[data-xds="BodyCopy"]');
@@ -92,36 +78,31 @@ export default class XingScraper extends Scraper {
                     }
                 });
             }
-            const extractedYearsAsMonths = this.extractYearsAsMonths(jobDuration.join(' '));
-            const extractedMonths = this.extractMonths(jobDuration.join(' '));
-            const experience = extractedYearsAsMonths.concat(extractedMonths).reduce((partialSum, a) => partialSum + a, 0);
-            this.addInformationToResult('experience', this.getYearsString(experience));
-        } catch (e) {
-            this.toast.show('Es gab einen Fehler!');
         }
+        const extractedYearsAsMonths = this.extractYearsAsMonths(jobDuration.join(' '));
+        const extractedMonths = this.extractMonths(jobDuration.join(' '));
+        const experience = extractedYearsAsMonths.concat(extractedMonths).reduce((partialSum, a) => partialSum + a, 0);
+        this.addInformationToResult('experience', this.getYearsString(experience));
     }
 
     getEducation(): void {
-        try {
-            const section = document.getElementById('ProfileTimelineModule');
-            const headline = [...section.querySelectorAll('*[data-xds="Headline"]')]
-                .filter((element: HTMLElement) => element.innerText.includes('Studium'))
-                .at(0);
+        const section = document.getElementById('ProfileTimelineModule');
+        const headline = [...section.querySelectorAll('*[data-xds="Headline"]')].filter((element: HTMLElement) => element.innerText.includes('Studium')).at(0);
+        if (headline) {
             const education = headline.nextElementSibling.querySelector('h2').innerText;
             this.addInformationToResult('education', education);
-        } catch (e) {
-            this.toast.show('Es gab einen Fehler!');
+        } else {
+            this.addInformationToResult('education', 'Nicht angegeben');
         }
     }
 
     getLocation(): void {
-        try {
-            const locationPin = document.querySelector('*[data-xds="IconLocationPin"]');
-            const locationString = locationPin.parentNode.lastElementChild.textContent;
-            this.addInformationToResult('city', locationString);
-        } catch (e) {
-            this.toast.show('Es gab einen Fehler!');
+        const locationPin = document.querySelector('*[data-xds="IconLocationPin"]');
+        if (!locationPin) {
+            throw new Error('Error');
         }
+        const locationString = locationPin.parentNode.lastElementChild.textContent;
+        this.addInformationToResult('city', locationString);
     }
 
     addInformationToResult(key: string, info: string): void {

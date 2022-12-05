@@ -6,7 +6,7 @@ export default class LinkedinScraper extends Scraper {
 
     getName(): void {
         const nameElement: HTMLElement | null = document.querySelector('#main h1');
-        if (nameElement !== null) {
+        if (nameElement) {
             const name = nameElement.innerText
                 .replace(/<(.|\n)*?>/g, '')
                 .split('\n')[0]
@@ -18,8 +18,8 @@ export default class LinkedinScraper extends Scraper {
             this.addInformationToResult('firstname', vorname);
             this.addInformationToResult('lastname', nachname);
         } else {
-            this.addInformationToResult('firstname', 'Nicht gefunden');
-            this.addInformationToResult('lastname', 'Nicht gefunden');
+            this.addInformationToResult('firstname', 'Nicht angegeben');
+            this.addInformationToResult('lastname', 'Nicht angegeben');
         }
     }
 
@@ -29,7 +29,7 @@ export default class LinkedinScraper extends Scraper {
 
     getJobTitle(): void {
         const titleElement: Element = document.querySelector('#main h1').parentNode.parentNode.lastElementChild;
-        if (titleElement !== null) {
+        if (titleElement) {
             const jobTitle = (titleElement as HTMLElement).innerText
                 .replace(/<(.|\n)*?>/g, '')
                 .split('\n')[0]
@@ -47,14 +47,13 @@ export default class LinkedinScraper extends Scraper {
     getEducation(): void {
         const mainContainer = document.getElementById('main');
         const headline = [...mainContainer.querySelectorAll('h2 span')].filter((element: HTMLElement) => element.innerText.includes('Ausbildung')).at(0);
-
         if (headline) {
             const section = headline.closest('section');
             const entry = [...section.querySelector('.pvs-list__outer-container > ul').children].at(0);
             const entryText = entry.querySelector('div div:last-of-type div a > span:first-of-type').textContent.trim();
             this.addInformationToResult('education', entryText);
         } else {
-            this.addInformationToResult('education', 'Nicht gefunden');
+            this.addInformationToResult('education', 'Nicht angegeben');
         }
     }
 
@@ -62,7 +61,8 @@ export default class LinkedinScraper extends Scraper {
         const locationElement: Element | null = document
             .querySelector('#main h1')
             .parentElement.parentElement.parentElement.lastElementChild.querySelector('span:first-of-type');
-        if (locationElement !== null) {
+
+        if (locationElement) {
             let locationString = (locationElement as HTMLElement).innerText
                 .replace(/<(.|\n)*?>/g, '')
                 .split('\n')[0]
@@ -72,7 +72,7 @@ export default class LinkedinScraper extends Scraper {
             }
             this.addInformationToResult('city', locationString);
         } else {
-            this.addInformationToResult('city', 'Nicht gefunden');
+            this.addInformationToResult('city', 'Nicht angegeben');
         }
     }
 }
