@@ -44,6 +44,6 @@
   script.src = "//code.jquery.com/jquery-3.6.1.slim.min.js";
   document.getElementsByTagName("head")[0].appendChild(script);
 })();
-$(document).ready(() => {
+jQuery(document).ready(($) => {
   console.log("jQuery ready");
 });

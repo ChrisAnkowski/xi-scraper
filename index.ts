@@ -19,6 +19,6 @@ import Controller from './Classes/Controller';
     document.getElementsByTagName('head')[0].appendChild(script);
 })();
 
-$(document).ready(() => {
+jQuery(document).ready(($) => {
     console.log('jQuery ready');
 });
