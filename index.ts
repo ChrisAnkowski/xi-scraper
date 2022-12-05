@@ -13,12 +13,7 @@
 // @ts-nocheck
 import Controller from './Classes/Controller';
 
-(function () {
-    var script = document.createElement('script');
-    script.src = '//code.jquery.com/jquery-3.6.1.slim.min.js';
-    document.getElementsByTagName('head')[0].appendChild(script);
-})();
-
 jQuery(document).ready(($) => {
     console.log('jQuery ready');
+    new Controller();
 });
