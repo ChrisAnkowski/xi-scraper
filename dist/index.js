@@ -120,11 +120,10 @@ class Scraper {
     this.addScrapeButton();
   }
   addScrapeButton() {
-    const button = document.createElement("button");
-    button.innerText = "Profilinformationen kopieren";
-    button.onclick = this.scrapeInformation.bind(this);
-    console.log(this.moreButton);
-    this.insertAfter(button, this.moreButton);
+    const button = $("<button></button>").text("Profilinformationen kopieren").click(() => {
+      this.scrapeInformation();
+    });
+    this.moreButton.after(button);
   }
   scrapeInformation() {
     try {

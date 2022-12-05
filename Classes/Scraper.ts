@@ -13,11 +13,13 @@ export default abstract class Scraper {
     }
 
     protected addScrapeButton(): void {
-        const button = document.createElement('button');
-        button.innerText = 'Profilinformationen kopieren';
-        button.onclick = this.scrapeInformation.bind(this);
-        console.log(this.moreButton);
-        this.insertAfter(button, this.moreButton);
+        // @ts-ignore
+        const button = $('<button></button>')
+            .text('Profilinformationen kopieren')
+            .click(() => {
+                this.scrapeInformation();
+            });
+        this.moreButton.after(button);
     }
 
     protected scrapeInformation(): void {
